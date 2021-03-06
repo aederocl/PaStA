@@ -7,7 +7,7 @@ if os.path.exists('pasta.db'):
 else:
  conn = sqlite3.connect('pasta.db')
  conn.execute('''CREATE TABLE PASTA
-          (ID INT PRIMARY KEY     NOT NULL,
+          (ID INTEGER PRIMARY KEY     AUTOINCREMENT,
           RA_MIN           REAL    NOT NULL,
           RA_MAX           REAL    NOT NULL,
           DEC_MIN           REAL    NOT NULL,
