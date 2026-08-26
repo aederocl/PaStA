@@ -1,0 +1,42 @@
+{
+  "upload_type": "software",
+  "title": "PaStA — the Panchromatic Stellar Atlas: catalogue construction and verification code",
+  "version": "1.0.0",
+  "license": "mit",
+  "description": "<p>Software that builds and verifies the Panchromatic Stellar Atlas (PaStA), a cross-match of Gaia DR3, the GALEX All-sky Imaging Survey and AllWISE giving 9,705,879 sources with photometry in twelve bands from 0.15 to 22 micron, harmonised to a single position at the Gaia reference epoch J2016.0 and to the AB magnitude system throughout.</p><p>This release accompanies Ederoclite, Camargo, Coelho &amp; Teixeira, <em>The Panchromatic Stellar Atlas (PaStA). I. Catalogue construction and verification</em>, Astronomy &amp; Astrophysics. It contains the tile queries and cross-matches that assemble the catalogue, the removal of the block-boundary duplicates, the conversion of all twelve bands to the AB system, the assignment of sources to colour-magnitude-diagram regions, the computation of the average SEDs and of the outlier flag, the scripts for every figure in the paper, the SIMBAD, Gaia-ESO and VOSA validation chain, and a verification script that recomputes every number quoted in the paper from the data products.</p><p>The catalogue itself is not part of this record; see the Data Availability section of the paper.</p>",
+  "creators": [
+    {
+      "name": "Ederoclite, Alessandro",
+      "affiliation": "Centro de Estudios de Física del Cosmos de Aragón (CEFCA), Teruel, Spain",
+      "orcid": "0000-0003-3656-5524"
+    },
+    {
+      "name": "Camargo, Morgan S.",
+      "affiliation": "Instituto de Astronomia, Geofísica e Ciências Atmosféricas, Universidade de São Paulo, Brazil",
+      "orcid": "0009-0002-4599-7185"
+    },
+    {
+      "name": "Coelho, Paula R. T.",
+      "affiliation": "Instituto de Astronomia, Geofísica e Ciências Atmosféricas, Universidade de São Paulo, Brazil",
+      "orcid": "0000-0003-1846-4826"
+    },
+    {
+      "name": "Teixeira, Ramachrisna",
+      "affiliation": "Instituto de Astronomia, Geofísica e Ciências Atmosféricas, Universidade de São Paulo, Brazil"
+    }
+  ],
+  "keywords": [
+    "astronomy",
+    "stellar photometry",
+    "spectral energy distributions",
+    "catalogues",
+    "cross-match",
+    "Gaia",
+    "GALEX",
+    "AllWISE",
+    "ultraviolet astronomy",
+    "infrared astronomy"
+  ],
+  "language": "eng",
+  "access_right": "open"
+}
