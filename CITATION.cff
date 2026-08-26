@@ -1,0 +1,39 @@
+cff-version: 1.2.0
+message: "If you use PaStA, please cite the paper below."
+title: "PaStA — the Panchromatic Stellar Atlas"
+abstract: >-
+  Software that builds and verifies the Panchromatic Stellar Atlas, a
+  cross-match of Gaia DR3, the GALEX All-sky Imaging Survey and AllWISE
+  giving 9,705,879 sources with twelve-band photometry from 0.15 to 22 micron.
+authors:
+  - family-names: Ederoclite
+    given-names: A.
+    affiliation: "Centro de Estudios de Física del Cosmos de Aragón (CEFCA)"
+    orcid: "https://orcid.org/0000-0003-3656-5524"
+  - family-names: Camargo
+    given-names: M. S.
+    affiliation: "Instituto de Astronomia, Geofísica e Ciências Atmosféricas, Universidade de São Paulo"
+    orcid: "https://orcid.org/0009-0002-4599-7185"
+  - family-names: Coelho
+    given-names: P. R. T.
+    affiliation: "Instituto de Astronomia, Geofísica e Ciências Atmosféricas, Universidade de São Paulo"
+    orcid: "https://orcid.org/0000-0003-1846-4826"
+  - family-names: Teixeira
+    given-names: R.
+    affiliation: "Instituto de Astronomia, Geofísica e Ciências Atmosféricas, Universidade de São Paulo"
+license: MIT
+repository-code: "https://github.com/aederocl/PaStA"
+preferred-citation:
+  type: article
+  title: "The Panchromatic Stellar Atlas (PaStA). I. Catalogue construction and verification"
+  journal: "Astronomy & Astrophysics"
+  year: 2026
+  authors:
+    - family-names: Ederoclite
+      given-names: A.
+    - family-names: Camargo
+      given-names: M. S.
+    - family-names: Coelho
+      given-names: P. R. T.
+    - family-names: Teixeira
+      given-names: R.
