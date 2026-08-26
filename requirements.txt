@@ -1,0 +1,14 @@
+# PaStA Paper I — Python dependencies
+#
+# Versions are those the catalogue and the figures were produced with.
+# STILTS is also required for the construction stage and is not a Python
+# package: https://www.star.bris.ac.uk/~mbt/stilts/
+
+numpy
+astropy
+astropy-healpix     # HEALPix binning in make_sky_density.py
+mocpy               # Multi-Order Coverage map in make_moc_sky.py
+matplotlib
+pandas
+astroquery          # CDS XMatch, in make_simbad_xmatch.py
+dustmaps            # CSFD and Edenhofer2023, in getcat_pasta.py

@@ -1,0 +1,20 @@
+# Catalogues and large data products live in the archive record, not in git
+*.fits
+*.npy
+*.npz
+pasta.db
+runPaStA.sh
+
+# ... except the small products the figures and the number sweep need
+!sed_region_stats_ab.npz
+
+# Figure output
+fig/
+
+# VOSA and SIMBAD working directories
+vosa_results_*/
+simbad_xmatch/
+
+__pycache__/
+*.pyc
+.DS_Store
