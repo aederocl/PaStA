@@ -26,6 +26,14 @@ are not:
   single zero point applies throughout: F_nu = 3631 Jy × 10^(−0.4 m_AB). Every
   magnitude and colour is AB unless stated otherwise.
 
+The released file is **self-describing**: every column carries a unit and a
+`TCOMM` description, and the primary header records the provenance, the epoch,
+the photometric system, the selection criteria and the null conventions. You
+should not need the paper open beside you to interpret it. The metadata is
+defined in one place, `COLUMN_META` and `PROVENANCE` in `make_pasta1_public.py`,
+so a rebuild reproduces it; `python make_pasta1_public.py --annotate` applies it
+to an existing file without re-deriving one.
+
 Two further properties matter when the photometry is used:
 
 - **NUV is required of every source; FUV is present for only 4.1 per cent**
@@ -105,6 +113,11 @@ python make_outlier_flag.py       # -> outlier_flag.npz, outlier_examples figure
 python build_pasta1_internal.py   # -> pasta1_internal.fits (dual epoch, Vega+AB)
 python make_pasta1_public.py      # -> pasta1_public.fits (J2016.0, AB)
 ```
+
+`make_pasta1_public.py --annotate` is a second mode that writes the units,
+column descriptions and provenance header onto an existing `pasta1_public.fits`
+without rebuilding it from the 3.5 GB intermediate. It is header-only: the data
+are streamed through untouched, so it costs no more memory than a file copy.
 
 **This stage is circular, and cannot be run once from top to bottom.**
 `make_sed_regions.py` and `make_outlier_flag.py` both read
