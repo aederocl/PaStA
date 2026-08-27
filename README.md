@@ -178,7 +178,7 @@ python verify_paper_numbers.py                      # everything, about two minu
 python verify_paper_numbers.py counts sky match     # or named sections
 ```
 
-Sections: `counts sky match pivot cmd flagdiag external`. Each recomputes a
+Sections: `counts sky match epoch pivot cmd flagdiag external`. Each recomputes a
 quoted number from the data products and prints it next to the value the paper
 quotes. It exists because a number that was correct when written is not
 necessarily correct after the catalogue changes; the sweep it was written for

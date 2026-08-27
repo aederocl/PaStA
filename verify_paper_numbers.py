@@ -18,6 +18,9 @@ Sections (run all, or name the ones wanted on the command line):
                 proper motions and distances (Sect. 3.2)
     sky         MOC sky coverage and the Galactic-latitude occupancy (Sect. 3.1)
     match       cross-match separations and the AB offsets of Table 2
+    epoch       the Sect. 3.1 bound on the cross-match epoch approximation:
+                proper motions, the displacement a residual baseline error
+                would cause, and the separation-vs-proper-motion residual
     pivot       the pivot wavelengths of Table 1, against the SVO service
     cmd         CMD regions (Table 3), the outlier flag (Table 4), the
                 per-region SED statistics (Sect. 5) and the Appendix A
@@ -48,6 +51,11 @@ import astropy.units as u
 
 PUBLIC = 'pasta1_public.fits'
 INTERNAL = 'pasta1_internal.fits'
+# The cross-match radius actually used: sr=0.00027 deg in getcat_pasta.py.
+# The paper rounds it to 1 arcsec in prose; the difference matters to none of
+# the numbers below, and 0.972 is the conservative choice for the fraction of
+# sources an epoch error would push outside it.
+MATCH_RADIUS = 0.972
 SIMBAD = 'simbad_xmatch.fits'
 GES = 'ges_pasta_matched.fits'
 VOSA_CSV = 'vosa_ges_comparison.csv'
@@ -695,8 +703,86 @@ def section_external():
     print('   overestimate of about 1,660 K; the third at Av=0.10, Vgfb=32]')
 
 
+def section_epoch():
+    """The Sect. 3.1 bound on the epoch approximation.
+
+    The cross-match carried the GALEX and AllWISE positions to the Gaia epoch
+    with dt = 16 yr.  That is an approximation; this quantifies the effect of
+    a residual error `delta` in the baseline, which displaces a search
+    position by mu * delta.
+
+    Two things this deliberately does NOT do, matching the paper:
+
+      - it does not solve for the effective epoch of either survey.  The
+        matched sample was selected by pairing under the very assumption
+        being tested, so a counterpart displaced beyond the search radius was
+        never admitted and the surviving distribution is censored exactly
+        where the answer lies.  (fit_survey_epoch.py tried; it fails its own
+        null test.)
+      - it puts no number on the resulting incompleteness, which is not
+        measurable from the matched table for the same reason.
+
+    The second half needs pasta1_internal.fits, which carries both the native
+    and the propagated survey coordinates, and takes a couple of minutes.
+    """
+    head('EPOCH APPROXIMATION (Sect. 3.1)')
+
+    with fits.open(PUBLIC, memmap=True) as h:
+        d = h[1].data
+        mu = np.hypot(np.asarray(d['PMRA'], np.float64),
+                      np.asarray(d['PMDEC'], np.float64))
+    mu = mu[np.isfinite(mu)]
+
+    med, p95 = np.median(mu), np.percentile(mu, 95)
+    print(f'  median total proper motion {med:.1f} mas/yr [paper 7.5]')
+    print(f'  95th percentile            {p95:.1f} mas/yr [paper 24.6]')
+
+    delta = 10.5                      # yr, the value the paper evaluates
+    disp = mu * delta / 1000.0        # mas -> arcsec
+    over = 100.0 * (disp > MATCH_RADIUS).sum() / len(mu)
+    print(f'  for delta = {delta} yr:')
+    print(f'    displacement, median     {np.median(disp):.3f}" [paper 0.08]')
+    print(f'    displacement, 95th pct   {np.percentile(disp, 95):.3f}" [paper 0.26]')
+    print(f'    beyond the {MATCH_RADIUS}" radius   {over:.4f} per cent '
+          f'[paper "fewer than 0.03"]')
+
+    # The residual trend with proper motion: flat if the baseline were exact.
+    if not os.path.exists(INTERNAL):
+        print(f'  ({INTERNAL} absent; skipping the separation residual)')
+        return
+
+    def sep_arcsec(ra1, dec1, ra2, dec2):
+        cd = np.cos(np.radians(0.5 * (dec1 + dec2)))
+        dra = (ra1 - ra2 + 180.0) % 360.0 - 180.0
+        return np.hypot(dra * cd, dec1 - dec2) * 3600.0
+
+    print(f'  reading {INTERNAL} for the separation residual ...')
+    with fits.open(INTERNAL, memmap=True) as h:
+        d = h[1].data
+        g = lambda c: np.asarray(d[c], dtype=np.float64)
+        pm = np.hypot(g('PMRA'), g('PMDEC'))
+        ra16, dec16 = g('ra_gaia_2016'), g('dec_gaia_2016')
+        surveys = {s: (g(f'ra_{s}_2016'), g(f'dec_{s}_2016'),
+                       g(f'ra_{s}_2000'), g(f'dec_{s}_2000'))
+                   for s in ('galex', 'allwise')}
+
+    quoted = {'allwise': '[paper 0.09 low PM -> 0.55 high PM; 0.12 -> 2.18 native]',
+              'galex': '[paper: no trend discernible]'}
+    for s, (r6, d6, r0, d0) in surveys.items():
+        ok = np.isfinite(r6) & np.isfinite(pm)
+        prop = sep_arcsec(ra16[ok], dec16[ok], r6[ok], d6[ok])
+        nat = sep_arcsec(ra16[ok], dec16[ok], r0[ok], d0[ok])
+        p = pm[ok]
+        lo_m, hi_m = p < 5.0, p >= 100.0
+        print(f'  Gaia-{s.upper()}  {quoted[s]}')
+        print(f'    mu < 5 mas/yr    propagated {np.median(prop[lo_m]):.3f}"  '
+              f'native {np.median(nat[lo_m]):.3f}"')
+        print(f'    mu > 100 mas/yr  propagated {np.median(prop[hi_m]):.3f}"  '
+              f'native {np.median(nat[hi_m]):.3f}"')
+
+
 SECTIONS = {'counts': section_counts, 'sky': section_sky, 'match': section_match,
-            'pivot': section_pivot, 'cmd': section_cmd,
+            'epoch': section_epoch, 'pivot': section_pivot, 'cmd': section_cmd,
             'flagdiag': section_flagdiag, 'external': section_external}
 
 if __name__ == '__main__':
