@@ -18,7 +18,6 @@ import re
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from matplotlib.lines import Line2D
 from astropy.table import Table
 
 VOSA_FILE    = 'vosa_results_96498/results/bestfitp.dat'
@@ -255,13 +254,8 @@ for ax, (label, gc, vc, ge, vmin_col, vmax_col, xl, yl, lim) in zip(axes, params
     ax.tick_params(labelsize=7)
     ax.grid(True, lw=0.3, alpha=0.4)
 
-# Legend on first panel
-handles = [
-    Line2D([0],[0], marker=s[1], color=s[0], ls='', ms=4, label=s[5])
-    for s in STYLE.values()
-]
-axes[0].legend(handles=handles, fontsize=5.5, loc='lower right',
-               framealpha=0.9, borderpad=0.4)
+# No legend: with four groups and three small panels there is nowhere to put
+# one that does not sit on the data, and the caption identifies every symbol.
 
 # No suptitle: the caption names the figure, and a title repeated inside the
 # frame only competes with it.
