@@ -13,6 +13,7 @@ Run from the paper root directory:
     python make_vosa_comparison.py
 """
 
+import os
 import re
 import numpy as np
 import pandas as pd
@@ -201,13 +202,17 @@ params = [
 # Plot style per group
 STYLE = {
     # (color, marker, zorder, ms, alpha, label)
-    'field_good': ('#2196F3', 'o', 4, 7, 0.90, f'Field, good fit (Vgfb $\\leq$ {VGFB_LIMIT})'),
-    'field_poor': ('#FF7043', '^', 3, 7, 0.75, f'Field, poor fit (Vgfb $>$ {VGFB_LIMIT})'),
-    'cha':        ('#E91E63', 's', 5, 7, 0.90, 'Chamaeleon (YSO candidates)'),
-    'm67':        ('#4CAF50', 'D', 5, 7, 0.90, 'M67 (free $A_V$)'),
+    'field_good': ('#2196F3', 'o', 4, 4, 0.90, f'Field, good fit (Vgfb $\\leq$ {VGFB_LIMIT})'),
+    'field_poor': ('#FF7043', '^', 3, 4, 0.75, f'Field, poor fit (Vgfb $>$ {VGFB_LIMIT})'),
+    'cha':        ('#E91E63', 's', 5, 4, 0.90, 'Chamaeleon (YSO candidates)'),
+    'm67':        ('#4CAF50', 'D', 5, 4, 0.90, 'M67 (free $A_V$)'),
 }
 
-fig, axes = plt.subplots(1, 3, figsize=(13, 4.8))
+# A&A text width is 17.6 cm.  The figure is drawn at that size and included
+# at width=\textwidth, so it is not rescaled by LaTeX and the font sizes below
+# are the sizes that reach the page.  Drawing it larger and letting
+# \includegraphics shrink it is what made the earlier version illegible.
+fig, axes = plt.subplots(1, 3, figsize=(6.93, 2.35))
 
 for ax, (label, gc, vc, ge, vmin_col, vmax_col, xl, yl, lim) in zip(axes, params):
     for _, row in merged[merged['has_ges']].iterrows():
@@ -239,36 +244,33 @@ for ax, (label, gc, vc, ge, vmin_col, vmax_col, xl, yl, lim) in zip(axes, params
                     xerr=xerr,
                     yerr=[[yerr_lo], [yerr_hi]],
                     fmt=marker, color=color, ms=ms,
-                    elinewidth=0.8, capsize=2, capthick=0.8,
+                    elinewidth=0.6, capsize=1.5, capthick=0.6,
                     alpha=alpha, zorder=zo)
 
     ax.plot(lim, lim, 'k--', lw=0.8, alpha=0.4, zorder=1)
     ax.set_xlim(lim); ax.set_ylim(lim)
-    ax.set_xlabel(xl, fontsize=11)
-    ax.set_ylabel(yl, fontsize=11)
-    ax.set_title(label, fontsize=11)
+    ax.set_xlabel(xl, fontsize=8)
+    ax.set_ylabel(yl, fontsize=8)
+    ax.set_title(label, fontsize=8.5)
+    ax.tick_params(labelsize=7)
     ax.grid(True, lw=0.3, alpha=0.4)
 
 # Legend on first panel
 handles = [
-    Line2D([0],[0], marker=s[1], color=s[0], ls='', ms=7, label=s[5])
+    Line2D([0],[0], marker=s[1], color=s[0], ls='', ms=4, label=s[5])
     for s in STYLE.values()
 ]
-axes[0].legend(handles=handles, fontsize=7.5, loc='upper left')
+axes[0].legend(handles=handles, fontsize=5.5, loc='lower right',
+               framealpha=0.9, borderpad=0.4)
 
-fig.suptitle(
-    'VOSA (Coelho et al.) vs GES DR5 stellar parameters  '
-    '— 28 bright sources, $W_1 < 8$ mag',
-    fontsize=10,
-)
+# No suptitle: the caption names the figure, and a title repeated inside the
+# frame only competes with it.
 fig.tight_layout()
 
-import os
 os.makedirs(OUTDIR, exist_ok=True)
 for ext in ('pdf', 'png'):
     path = os.path.join(OUTDIR, f'vosa_comparison.{ext}')
     fig.savefig(path, dpi=150, bbox_inches='tight')
     print(f'Saved {path}')
 
-plt.show()
 print('Done.')

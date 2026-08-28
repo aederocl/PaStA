@@ -142,6 +142,7 @@ output.
 | `make_eda.py` | colour–colour diagrams, per-band magnitude histograms |
 | `make_outlier_flag.py` | example SEDs of outlier-flagged sources |
 | `make_cmd.py` | colour–magnitude density map |
+| `make_quality_figures.py` | cross-match coordinate offsets, and magnitude against uncertainty for the Gaia and AllWISE bands |
 | `make_moc_sky.py` | the Multi-Order Coverage map, and the 26,785 deg² (64.9 per cent) quoted for the sky coverage |
 
 `make_moc_sky.py` is kept rather than folded into `make_sky_density.py`:
